@@ -1,0 +1,40 @@
+
+.container{
+    /* border: 1px solid black; */
+  }
+  
+  .header{
+    /* border: 1px solid blue; */
+    width: 100%;
+    
+    padding: 3px;
+  }
+  
+  .body{
+    /* border: 1px solid black; */
+    align-items: center;
+    width: 100%; 
+    /* display: inline-block;
+    height: 200px; */
+  }
+  
+  .body table, th {
+    border: 1px solid ;
+    padding: 3px;
+    text-align: center;
+    border-collapse: collapse;
+   
+  }
+  
+  .body table{
+    width: 100%;
+  }
+  
+  .footer{
+    /* border: 1px solid red; */
+    align-items: end;
+    flex: 1;
+    padding: 3px;
+    right: 0;
+    position: absolute;
+  }
