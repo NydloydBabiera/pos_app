@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+</head>
+<link rel="stylesheet" href="appUser.css">
+
+<body>
+    <div class="content">
+        <h1>Users</h1>
+    </div>
+    <div class="body">
+        <table id="apiTable" class="content-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be dynamically generated here -->
+            </tbody>
+
+        </table>
+        <div class="footer">
+            <button id="openModal">ADD</button>
+        </div>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>New User</h2>
+                <form id="addUserForm">
+                    <div class="form-group">
+                        <label for="username">First name:</label>
+                        <input type="text" id="fName" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Middle name:</label>
+                        <input type="text" id="mName" placeholder="Middle Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Last name:</label>
+                        <input type="text" id="lName" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Role</label>
+                        <select id="userRole" name="roles">
+                            <option value="CUSTOMER">CUSTOMER</option>
+                            <option value="CASHIER">CASHIER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+                    <div class="form-group-footer">
+                        <input type="submit" id="addUser" value="ADD USER">
+                        <input type="submit" id="cancel"  value="CANCEL">
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+    <script src="users.js"> </script>
+</body>
+
+</html>
+
+</html>

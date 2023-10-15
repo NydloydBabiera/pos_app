@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>POS</title>
+</head>
+<link rel="stylesheet" href="app.css">
+
+<div class="container">
+  <div class="header">
+    <h1>Point of Sales </h1>
+    <!-- <h2>Point of Sales</h2> -->
+    <div class="headerTrans">
+      <div class="group1">
+        <label for="transactionNo" class="lbl"> Transaction No.</label>
+        <label for="transactionNo" id="transTxt" class="txtField">000000</label>
+      </div>
+      <div class="group2">
+        <label for="transactionNo" class="lbl">User ID</label>
+        <label for="transactionNo" id="userTxt" class="txtField">000000</label>
+      </div>
+      <div class="group3">
+        <label for="transactionNo" class="lbl">Date Transaction</label>
+        <label for="transactionNo" id="dateTxt" class="txtField">000000</label>
+      </div>
+
+    </div>
+
+  </div>
+  <div>
+
+  </div>
+  <div id="status"></div>
+  <div class="body">
+    <input type="text" placeholder="Product Name" id="paramInput">
+    <button id="get-btn">GET Data</button>
+    <table id="apiTable" class="content-table">
+      <thead>
+        <tr>
+          <th>Barcode</th>
+          <th>Product</th>
+          <th>Description</th>
+          <th>Variant</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows will be dynamically generated here -->
+      </tbody>
+      <script src="POS.js"> </script>
+    </table>
+  </div>
+
+  <div class="footer">
+    <label for="text">TOTAL:</label>
+    <!-- <input type="text" id="txtTotal"> -->
+    <label for="total" id="displayTotal">0.00</label>
+  </div>
+
+
+</div>
+
+</html>

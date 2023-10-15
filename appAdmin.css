@@ -1,0 +1,39 @@
+.container {
+    /* border: 1px solid black; */
+    display: flex;
+    border-bottom: 2px solid #4CAF50;;
+    
+}
+
+.menu {
+    /* border: 1px solid red; */
+    /* padding: 5px 20px 5px 5px; */
+    margin: auto;
+    width: 50%;
+}
+
+.menu button{
+    /* width: 50%; */
+}
+
+button {
+    background-color: white;
+    color: black;
+    border: 1px solid #4CAF50;
+    height: 40px;
+    width: 100px;
+    transition-duration: 0.4s;
+    font-size: 20px;
+}
+
+button:hover {
+    background-color: #4CAF50;
+    /* Green */
+    color: white;
+}
+
+.center-text{
+    text-align: center;
+    height: 500px;
+    /* border: 1px solid #4CAF50; */
+}
