@@ -1,3 +1,4 @@
+// import { apiUrl } from "./config.js";
 const socket = new WebSocket("ws://192.168.68.100"); //192.168.68.105 - tacurong 192.168.254.103-gensan
 
 const getBtn = document.getElementById("get-btn");
@@ -41,7 +42,7 @@ socket.addEventListener("close", (event) => {
 
 function fetchData(paramValue) {
   // paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
-  fetch(`http://localhost:5100/products/getSpecificProduct/${paramValue}`) // Replace with your API endpoint
+  fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`) // Replace with your API endpoint
     .then((response) => response.json())
     .then((data) => {
       const tableBody = document.querySelector("#apiTable tbody");
@@ -86,15 +87,13 @@ function getCurrentDate() {
   const month = currentDate.getMonth() + 1; // Months are zero-based (0 = January)
   const day = currentDate.getDate();
 
-  dateTxt.textContent = month+'/'+day+'/'+year;
+  dateTxt.textContent = month + "/" + day + "/" + year;
 }
 
 window.addEventListener("load", function () {
   getCurrentDate();
   const input = document.getElementById("paramInput");
   totalProd = 0;
-  // displayTotal.textContent = "";
-  // input.value = '';
 });
 
 getBtn.addEventListener("click", fetchData);
