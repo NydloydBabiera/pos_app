@@ -3,13 +3,15 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent the form from submitting
 
-    // const username = document.getElementById("username").value;
-    // const password = document.getElementById("password").value;
+   // const username = document.getElementById("username").value;
+    // const password = document.getElementById("password").value; 
     const data = {
       userName: document.getElementById("username").value,
       userPassword: document.getElementById("password").value,
     };
-    fetch(apiUrl, "/user/loginUser", {
+
+    console.log("data:",data);
+    fetch(`${apiUrl}/user/loginUser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Set the content type to JSON
@@ -38,4 +40,8 @@ document
       .catch((error) => {
         console.error("Error:", error);
       });
+  });
+
+  window.addEventListener("load", function () {
+    console.log("apiURL:", apiUrl,"/user/loginUser");
   });

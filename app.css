@@ -134,3 +134,19 @@ h1{
   transition: width 0.4s ease-in-out;
   text-align: center;
 }
+
+.footer button {
+  background-color: white;
+  color: black;
+  border: 1px solid #4CAF50;
+  height: 40px;
+  width: 150px;
+  transition-duration: 0.4s;
+  font-size: 20px;
+}
+
+.footer button:hover {
+  background-color: #4CAF50;
+  /* Green */
+  color: white;
+}
