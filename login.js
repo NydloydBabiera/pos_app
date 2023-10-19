@@ -1,5 +1,3 @@
-
-
 document
   .getElementById("loginForm")
   .addEventListener("submit", function (event) {
@@ -11,14 +9,14 @@ document
       userName: document.getElementById("username").value,
       userPassword: document.getElementById("password").value,
     };
-   fetch("http://192.168.68.103:5100/user/loginUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // Set the content type to JSON
-        // Add any other headers as needed
-      },
-      body: JSON.stringify(data), // Convert the data to JSON format
-    })
+    fetch(apiUrl, "/user/loginUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Set the content type to JSON
+          // Add any other headers as needed
+        },
+        body: JSON.stringify(data), // Convert the data to JSON format
+      })
       .then((response) => response.json()) // Parse the response as JSON
       .then((result) => {
         console.log("Response from the API:");
@@ -33,7 +31,7 @@ document
             default:
               break;
           }
-        }else{
+        } else {
           alert("No user found");
         }
       })

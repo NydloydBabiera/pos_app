@@ -1,5 +1,3 @@
-
-
 // Get references to the modal and buttons
 const modal = document.getElementById("myModal");
 const openModalButton = document.getElementById("openModal");
@@ -48,7 +46,7 @@ function onEdit(td) {
   document.getElementById("lName").value = fullName[2];
   document.getElementById("userRole").value = selectedRow.cells[3].innerHTML;
   // openModal();
-  console.log("userRole:",selectedRow.cells[3].innerHTML);
+  console.log("userRole:", selectedRow.cells[3].innerHTML);
 }
 
 async function addNewUser(event) {
@@ -60,12 +58,12 @@ async function addNewUser(event) {
     userRole: document.getElementById("userRole").value,
   };
   await fetch(`${apiUrl}/user/addUser`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
     .then((response) => response.json())
     .then((result) => {
       fetchData();
@@ -84,13 +82,13 @@ function closeModal() {
 }
 
 // Event listeners for opening and closing the modal
-openModalButton.addEventListener("click", function(){
+openModalButton.addEventListener("click", function () {
   document.getElementById("fName").value = '';
   document.getElementById("mName").value = '';
   document.getElementById("lName").value = '';
   modalTitle.textContent = "New User"
   modal.style.display = "block";
-} );
+});
 closeModalButton.addEventListener("click", closeModal);
 // addUser.addEventListener("click", addNewUser);
 document.getElementById("addUserForm").addEventListener("submit", addNewUser);
