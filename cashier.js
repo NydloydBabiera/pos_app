@@ -18,10 +18,23 @@ async function fetchData() {
                 const button = document.createElement("button");
                 button.textContent = "Click Me";
                 const row = document.createElement("tr");
+                // const dateTrans = item.date_trans.toLocaleString('en-US', {
+                //     dateStyle: 'full',
+                //     timeStyle: 'short'
+                // })
+                const dateTrans = new Date(item.date_trans);
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+                const formattedDate = dateTrans.toLocaleDateString('en-US', options);
+
                 row.innerHTML = `
                               <td>${item.transaction_id}</td>
                               <td>${item.transaction_code}</td>
-                              <td>${item.date_trans}</td>
+                              <td>${item.transaction_status}</td>
+                              <td>${formattedDate}</td>
                               <td>${item.amt_total}</td>
                               <td><button onClick="onEdit(this)">PAY</button>
                               
@@ -93,5 +106,8 @@ async function fetchData() {
 // // addUser.addEventListener("click", addNewUser);
 // document.getElementById("addUserForm").addEventListener("submit", addNewUser);
 window.addEventListener("load", function () {
+    if (!this.localStorage.getItem('userId')) {
+        window.location.href = 'index.html';
+    }
     fetchData();
 });

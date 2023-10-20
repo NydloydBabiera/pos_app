@@ -1,8 +1,8 @@
 // Function to fetch data from the API and populate the table
 const getBtn = document.getElementById("get-btn");
 const checkout = document.getElementById("checkout");
-const transTxt = document.getElementById("transtxt");
-const transtxt = document.getElementById("userTxt");
+const transactionCode = document.getElementById("transTxt");
+const userTxt = document.getElementById("userTxt");
 const dateTxt = document.getElementById("dateTxt");
 const txtTotal = document.getElementById("displayTotal");
 const dataArr = [];
@@ -10,12 +10,18 @@ let totalProd = 0;
 
 async function fetchData() {
   const paramValue = document.getElementById("paramInput").value;
-  fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`) // Replace with your API endpoint
+  fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': '*',
+      }
+    }) // Replace with your API endpoint
     .then((response) => response.json())
     .then((data) => {
       const tableBody = document.querySelector("#apiTable tbody");
 
-      
+
 
       // Clear existing table rows
       tableBody.innerHTML = "";
@@ -47,21 +53,27 @@ async function fetchData() {
 async function saveTransaction() {
   const apiTable = document.getElementById("apiTable");
   const rows = apiTable.getElementsByTagName("tr");
-  const data = [];
-  const trans_line = []
-  const trans_header = []
-  
-    trans_header = {
-      transaction_code: transTxt.textContent,
-      date_trans: dateTxt.textContent,
-      amt_total: txtTotal.textContent,
-      amt_paid: 0,
-      payment_type: "",
-      customer_id: 2,
-      cashier_id: "",
-      transaction_status: "",
-    }
-  
+  console.log("row count:", rows.length);
+
+  if (rows.length <= 1) {
+    alert("No product/s added");
+    return;
+  }
+
+  let trans_line = []
+  let trans_header = []
+
+  trans_header = {
+    transaction_code: "",
+    date_trans: dateTxt.textContent,
+    amt_total: Number(txtTotal.textContent),
+    amt_paid: 0,
+    payment_type: "",
+    customer_id: Number(userTxt.textContent),
+    // cashier_id: 0,
+    transaction_status: "",
+  }
+  // add trans_header to main json
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
@@ -77,35 +89,31 @@ async function saveTransaction() {
       amt_total_lines: amt_total_lines,
     });
   }
+  // add trans_line to main json
 
-  data.push(trans_line);
+  const data = {
+    trans_header: trans_header,
+    trans_line: trans_line
+  }
 
-  console.log("data:",data);
-  // data = {
-  //   trans_header: {
-  //     transaction_code: "",
-  //     date_trans: "2023-10-18",
-  //     amt_total: 100,
-  //     amt_paid: 0,
-  //     payment_type: "",
-  //     customer_id: 2,
-  //     cashier_id: 4,
-  //     transaction_status: "",
-  //   },
-  //   trans_line: [
-  //     {
-  //       product_id: 1,
-  //       qty_prod: 3,
-  //       amt_total_lines: 102.24,
-  //     },
-  //     {
-  //       product_id: 2,
-  //       qty_prod: 2,
-  //       amt_total_lines: 57.15,
-  //     },
-  //   ],
-  // };
+  console.log("data:", data);
+
+  await fetch(`${apiUrl}/transaction/saveTransaction`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+      },
+      body: JSON.stringify(data),
+    }).then((response) => response.json())
+    .then((result) => {
+      transactionCode.textContent = result.trans_header[0].transaction_status + result.trans_header[0].transaction_code;
+      confirm("Transaction saved! Please proceed to checkout counters")
+    }).catch((error) => {
+      console.error("Error:", error);
+    });
 }
+
 
 function getCurrentDate() {
   const currentDate = new Date();
@@ -120,14 +128,22 @@ function getCurrentDate() {
 }
 
 window.addEventListener("load", function () {
+  if (!this.localStorage.getItem('userId')) {
+    window.location.href = 'index.html';
+  }
   const input = document.getElementById("paramInput");
   totalProd = 0;
   getCurrentDate();
+  userTxt.textContent = padWithLeadingZeros(this.localStorage.getItem('data'), 6);
   // txtTotal.textContent = '';
   // input.value = '';
 });
 
+function padWithLeadingZeros(num, totalLength) {
+  return String(num).padStart(totalLength, "0");
+}
+
 // Call the fetchData function to populate the table when the page loads
 // window.addEventListener('load', fetchData);
 getBtn.addEventListener("click", fetchData);
-checkout.addEventListener("click",saveTransaction)
+checkout.addEventListener("click", saveTransaction)

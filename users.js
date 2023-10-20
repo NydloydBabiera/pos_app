@@ -7,6 +7,7 @@ let titleModal = '';
 const addUser = document.getElementById("addUser");
 var selectedId = 0;
 
+
 async function fetchData() {
   await fetch(`${apiUrl}/user/getAllUsers`) // Replace with your API endpoint
     .then((response) => response.json())

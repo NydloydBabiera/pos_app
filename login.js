@@ -1,16 +1,18 @@
+var userId = 0;
+
 document
   .getElementById("loginForm")
   .addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent the form from submitting
 
-   // const username = document.getElementById("username").value;
+    // const username = document.getElementById("username").value;
     // const password = document.getElementById("password").value; 
     const data = {
       userName: document.getElementById("username").value,
       userPassword: document.getElementById("password").value,
     };
 
-    console.log("data:",data);
+    console.log("data:", data);
     fetch(`${apiUrl}/user/loginUser`, {
         method: "POST",
         headers: {
@@ -21,11 +23,13 @@ document
       })
       .then((response) => response.json()) // Parse the response as JSON
       .then((result) => {
-        console.log("Response from the API:");
+        localStorage.setItem('userId', result.data.user_id);
+        // window.location.href = 'POS.html';
         if (result.status == 1) {
           switch (result.data.user_role) {
             case "CUSTOMER":
               window.location.href = "POS.html";
+
               break;
             case "ADMIN":
               window.location.href = "admin.html";
@@ -42,6 +46,7 @@ document
       });
   });
 
-  window.addEventListener("load", function () {
-    console.log("apiURL:", apiUrl,"/user/loginUser");
-  });
+window.addEventListener("load", function () {
+  console.log("apiURL:", apiUrl, "/user/loginUser");
+  localStorage.removeItem('userId');
+});
