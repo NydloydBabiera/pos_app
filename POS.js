@@ -71,7 +71,7 @@ function fetchData(paramValue) {
       dataArr.forEach((item) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-                    <td>${item.barcode}</td>
+                    <td>${item.product_id}</td>
                     <td>${item.name_prod}</td>
                     <td>${item.description}</td>
                     <td>${item.prod_size}</td>
@@ -102,7 +102,7 @@ async function saveTransaction() {
   trans_header = {
     transaction_code: "",
     date_trans: dateTxt.textContent,
-    amt_total: Number(txtTotal.textContent),
+    amt_total: Number(displayTotal.textContent),
     amt_paid: 0,
     payment_type: "",
     customer_id: Number(userTxt.textContent),
@@ -160,17 +160,23 @@ function getCurrentDate() {
   const month = currentDate.getMonth() + 1; // Months are zero-based (0 = January)
   const day = currentDate.getDate();
 
-  dateTxt.textContent = month + "/" + day + "/" + year;
+  dateTxt.textContent = year + "-" + month + "-" + day;
 }
 
 window.addEventListener("load", function () {
+  console.log("userId:",localStorage.getItem('userId'));
   if (!this.localStorage.getItem('userId')) {
     window.location.href = 'index.html';
   }
   getCurrentDate();
   const input = document.getElementById("paramInput");
   totalProd = 0;
-  userTxt.textContent = padWithLeadingZeros(this.localStorage.getItem('data'), 6);
+  userTxt.textContent = padWithLeadingZeros(this.localStorage.getItem('userId'), 6);
+  // padWithLeadingZeros(this.localStorage.getItem('userId'), 6);
 });
 
 getBtn.addEventListener("click", fetchData);
+checkout.addEventListener("click", saveTransaction)
+function padWithLeadingZeros(num, totalLength) {
+  return String(num).padStart(totalLength, "0");
+}
