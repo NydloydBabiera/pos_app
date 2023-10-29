@@ -1,14 +1,18 @@
 // import { apiUrl } from "./config.js";
-const socket = new WebSocket("ws://192.168.68.100"); //192.168.68.105 - tacurong 192.168.254.103-gensan
+const socket = new WebSocket("ws://192.168.68.106"); //192.168.68.105 - tacurong 192.168.254.103-gensan
+const socketAPI = new WebSocket("ws://localhost:3000");
 const checkout = document.getElementById("checkout");
 const transactionCode = document.getElementById("transTxt");
-const getBtn = document.getElementById("get-btn");
+// const getBtn = document.getElementById("get-btn");
+// const deleteBtn = document.getElementById("delete-btn");
 const userTxt = document.getElementById("userTxt");
 const displayTotal = document.getElementById("displayTotal");
 const dataArr = [];
 let totalProd = 0;
 let paramValue = "";
 const myList = [];
+const checkList = [];
+let valExist = false;
 
 //socket for esp32 camera
 socket.addEventListener("open", (event) => {
@@ -26,13 +30,20 @@ socket.addEventListener("message", (event) => {
   const outputDiv = document.getElementById("output");
   paramValue = event.data;
 
+  // kung empty ang paramValue it means wala siya unod, iremove tanan na ara sa rows
+  if (paramValue === "empty") {
+    console.log("No product found");
+    removeAllRows();
+    return;
+  }
   if (myList.includes(paramValue)) {
     return;
   }
 
-  console.log(paramValue);
+  console.log("paramValue:", paramValue);
   fetchData(paramValue);
   myList.push(paramValue);
+  // checkList.push(paramValue);
 });
 
 socket.addEventListener("close", (event) => {
@@ -42,16 +53,49 @@ socket.addEventListener("close", (event) => {
   status.innerHTML += `<p> Status: Connection Close</p>`;
 });
 
+// socket for API
+
+socketAPI.onopen = (event) => {
+  console.log("WebSocket connection opened:", event);
+};
+
+socketAPI.onmessage = (event) => {
+  console.log("received message");
+};
+
+socketAPI.onclose = (event) => {
+  if (event.wasClean) {
+    console.log("WebSocket closed cleanly:", event);
+  } else {
+    console.error("WebSocket connection closed unexpectedly:", event);
+  }
+};
+
+socketAPI.onerror = (error) => {
+  console.error("WebSocket error:", error);
+};
+
+function findMissingValues(arr1, arr2) {
+  // Create a Set from the second array for faster lookups
+  const set2 = new Set(arr2);
+
+  // Use filter to find values in arr1 that are not in arr2
+  const missingValues = arr1.filter((value) => !set2.has(value));
+
+  return missingValues;
+}
+
 function fetchData(paramValue) {
-  paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
-  // fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { // uncomment this if using websocket
-  fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { //uncomment this if using button
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*',
-      }
-    }) // Replace with your API endpoint
+  // paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
+  fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { // uncomment this if using websocket
+  // fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, {
+    //uncomment this if using button
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  }) // Replace with your API endpoint
     .then((response) => response.json())
     .then((data) => {
       const tableBody = document.querySelector("#apiTable tbody");
@@ -86,18 +130,51 @@ function fetchData(paramValue) {
     });
 }
 
+function removeRow() {
+  dataValue = document.getElementById("paramInput").value;
+  var table = document.getElementById("apiTable");
+  // Loop through the rows in the table (skip the header row)
+  for (var i = 1; i < table.rows.length; i++) {
+    var cellContent = table.rows[i].cells[1].textContent;
+
+    if (cellContent === dataValue) {
+      var elementInRow = table.rows[i].cells[1];
+      table.deleteRow(i);
+      console.log("Element in the row:", elementInRow.textContent);
+    }
+  }
+}
+
+function removeAllRows() {
+  var table = document.getElementById("apiTable");
+
+  var rowCount = table.rows.length;
+
+  for (var i = rowCount - 1; i > 0; i--) {
+    table.deleteRow(i);
+  }
+
+  //zero out the total
+  totalProd = 0;
+  displayTotal.textContent = totalProd;
+
+  // clear all array contents
+  myList.splice(0, myList.length);
+  dataArr.splice(0, dataArr.length);
+}
+
 async function saveTransaction() {
   const apiTable = document.getElementById("apiTable");
   const rows = apiTable.getElementsByTagName("tr");
-  console.log("row count:", rows.length);
+  socketAPI.send("POS");
 
   if (rows.length <= 1) {
     alert("No product/s added");
     return;
   }
 
-  let trans_line = []
-  let trans_header = []
+  let trans_line = [];
+  let trans_header = [];
 
   trans_header = {
     transaction_code: "",
@@ -108,7 +185,7 @@ async function saveTransaction() {
     customer_id: Number(userTxt.textContent),
     // cashier_id: 0,
     transaction_status: "",
-  }
+  };
   // add trans_header to main json
 
   for (let i = 1; i < rows.length; i++) {
@@ -129,27 +206,30 @@ async function saveTransaction() {
 
   const data = {
     trans_header: trans_header,
-    trans_line: trans_line
-  }
+    trans_line: trans_line,
+  };
 
   console.log("data:", data);
 
   await fetch(`${apiUrl}/transaction/saveTransaction`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-      },
-      body: JSON.stringify(data),
-    }).then((response) => response.json())
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
     .then((result) => {
-      transactionCode.textContent = result.trans_header[0].transaction_status + result.trans_header[0].transaction_code;
-      confirm("Transaction saved! Please proceed to checkout counters")
-    }).catch((error) => {
+      transactionCode.textContent =
+        result.trans_header[0].transaction_status +
+        result.trans_header[0].transaction_code;
+      confirm("Transaction saved! Please proceed to checkout counters");
+    })
+    .catch((error) => {
       console.error("Error:", error);
     });
 }
-
 
 function getCurrentDate() {
   const dateTxt = document.getElementById("dateTxt");
@@ -164,19 +244,24 @@ function getCurrentDate() {
 }
 
 window.addEventListener("load", function () {
-  console.log("userId:",localStorage.getItem('userId'));
-  if (!this.localStorage.getItem('userId')) {
-    window.location.href = 'index.html';
+  console.log("userId:", localStorage.getItem("userId"));
+  if (!this.localStorage.getItem("userId")) {
+    window.location.href = "index.html";
   }
   getCurrentDate();
   const input = document.getElementById("paramInput");
   totalProd = 0;
-  userTxt.textContent = padWithLeadingZeros(this.localStorage.getItem('userId'), 6);
+  userTxt.textContent = padWithLeadingZeros(
+    this.localStorage.getItem("userId"),
+    6
+  );
   // padWithLeadingZeros(this.localStorage.getItem('userId'), 6);
 });
 
-getBtn.addEventListener("click", fetchData);
-checkout.addEventListener("click", saveTransaction)
+// getBtn.addEventListener("click", fetchData);
+checkout.addEventListener("click", saveTransaction);
+// deleteBtn.addEventListener("click", removeRow);
+
 function padWithLeadingZeros(num, totalLength) {
   return String(num).padStart(totalLength, "0");
 }
