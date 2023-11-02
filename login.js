@@ -54,4 +54,5 @@ document
 window.addEventListener("load", function () {
   console.log("apiURL:", apiUrl, "/user/loginUser");
   localStorage.removeItem('userId');
+  localStorage.removeItem('transactionId');
 });

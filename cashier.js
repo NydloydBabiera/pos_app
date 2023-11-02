@@ -6,18 +6,18 @@ var modalTitle = document.getElementById("modal-title");
 let titleModal = "";
 const addUser = document.getElementById("addUser");
 var selectedId = 0;
-
+let transactionId = 0;
 const socketCashier = new WebSocket("ws://localhost:3000");
 
 socketCashier.addEventListener("message", (event) => {
   console.log("new data:", event.data.transaction_id);
-// console.log("received message");
+  // console.log("received message");
   //  socketCashier.send("cashier",5000);
 });
 
 socketCashier.onopen = (event) => {
   console.log("WebsocketCashier connection opened:", event);
-  socketCashier.send("cashier")
+  socketCashier.send("cashier");
   // socketCashier.send("cashier", 5000);
 };
 
@@ -38,8 +38,6 @@ socketCashier.onclose = (event) => {
 socketCashier.onerror = (error) => {
   console.error("WebsocketCashier error:", error);
 };
-
-
 
 function appendMessage(message) {
   const item = document.createElement("li");
@@ -88,66 +86,44 @@ async function fetchData() {
 }
 
 // // Edit the data
-// function onEdit(td) {
-//   modalTitle.textContent = "Update Details"
-//   modal.style.display = "block";
-//   selectedRow = td.parentElement.parentElement;
-//   selectedId = selectedRow.cells[0].innerHTML;
-//   const fullName = selectedRow.cells[1].innerHTML.split(' ');
-//   document.getElementById("fName").value = fullName[0];
-//   document.getElementById("mName").value = fullName[1];
-//   document.getElementById("lName").value = fullName[2];
-//   document.getElementById("userRole").value = selectedRow.cells[3].innerHTML;
-//   // openModal();
-//   console.log("userRole:",selectedRow.cells[3].innerHTML);
-// }
+function onEdit(button) {
+  var table = document.getElementById("apiTable");
+  // Get the parent row of the button (the <tr> element)
+  const row = button.closest("tr");
 
-// async function addNewUser(event) {
-//   event.preventDefault();
-//   const data = {
-//     firstName: document.getElementById("fName").value,
-//     middleName: document.getElementById("mName").value,
-//     lastName: document.getElementById("lName").value,
-//     userRole: document.getElementById("userRole").value,
-//   };
-//   await fetch(`${apiUrl}/user/addUser`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   })
-//     .then((response) => response.json())
-//     .then((result) => {
-//       fetchData();
-//       console.log("result:", result);
-//     })
-//     .catch((error) => {
-//       console.error("Error:", error);
-//     });
-// }
+  // Get the cell containing the price (2nd cell, index 1)
+  transactionId = row.cells[0].textContent;
+  const transactionCode = row.cells[1].textContent;
 
-// // Function to open the modal
 
-// // Function to close the modal
-// function closeModal() {
-//   modal.style.display = "none";
-// }
+  if (confirm(`Process transaction ${transactionCode}?`)) {
+    console.log("yes");
+    processTransaction();
+    return;
+  }
+}
+// add modal para sa pagdawat sa payment
+async function processTransaction() {
+  await fetch(`${apiUrl}/transaction/processTransaction/${transactionId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      alert(result.message);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
 
-// // Event listeners for opening and closing the modal
-// openModalButton.addEventListener("click", function(){
-//   document.getElementById("fName").value = '';
-//   document.getElementById("mName").value = '';
-//   document.getElementById("lName").value = '';
-//   modalTitle.textContent = "New User"
-//   modal.style.display = "block";
-// } );
-// closeModalButton.addEventListener("click", closeModal);
-// // addUser.addEventListener("click", addNewUser);
-// document.getElementById("addUserForm").addEventListener("submit", addNewUser);
 window.addEventListener("load", function () {
   if (!this.localStorage.getItem("userId")) {
     window.location.href = "index.html";
   }
   fetchData();
+  console.log("");
 });

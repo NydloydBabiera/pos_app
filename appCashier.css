@@ -35,6 +35,10 @@
     text-align: center;
     font-size: 15px;
   }
+
+  .content-table tbody tr:hover {
+    background-color: #90e093;
+  }
   
   .content-table tbody button {
     background-color: white;
@@ -44,6 +48,10 @@
     width: 50px;
     transition-duration: 0.4s;
     font-size: 10px;
+  }
+
+  .content-table tbody button:hover {
+    background-color: #4CAF50;
   }
   
   

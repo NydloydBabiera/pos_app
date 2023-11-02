@@ -1,0 +1,37 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="appChecout.css">
+    <title>Checkout</title>
+</head>
+
+<body>
+    <h1>PLEASE PROCEED TO THE COUNTER FOR PAYMENT</h1>
+    <div class="receipt">
+        <div class="header">
+            <h1>E-Cart POS</h1>
+        </div>
+        <div class="info">
+            <div class="recipient">
+                <p><strong>Code:</strong> <span id="transactionNo"></span></p>
+                <p><strong>Date:</strong> <span id="transactionDate"></span></p>
+                
+            </div>
+            <div class="details">
+                <p><strong>User:</strong> <span id="userId"></span></p>
+                <p><strong>Cashier:</strong> <span id="cashierId"></span></p>
+            </div>
+        </div>
+        <div class="items" id="itemsList">
+        </div>
+        <div class="total">
+            <p><strong>Total:</strong> ₱<span id="totalAmount"></span></p>
+        </div>
+    </div>
+    <script type="text/javascript" src="config.js"> </script>
+    <script type="text/javascript" src="checkout.js"> </script>
+</body>
+
+</html>

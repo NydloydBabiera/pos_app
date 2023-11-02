@@ -3,7 +3,7 @@ const socket = new WebSocket("ws://192.168.68.106"); //192.168.68.105 - tacurong
 const socketAPI = new WebSocket("ws://localhost:3000");
 const checkout = document.getElementById("checkout");
 const transactionCode = document.getElementById("transTxt");
-// const getBtn = document.getElementById("get-btn");
+const getBtn = document.getElementById("get-btn");
 // const deleteBtn = document.getElementById("delete-btn");
 const userTxt = document.getElementById("userTxt");
 const displayTotal = document.getElementById("displayTotal");
@@ -55,25 +55,25 @@ socket.addEventListener("close", (event) => {
 
 // socket for API
 
-socketAPI.onopen = (event) => {
-  console.log("WebSocket connection opened:", event);
-};
+// socketAPI.onopen = (event) => {
+//   console.log("WebSocket connection opened:", event);
+// };
 
-socketAPI.onmessage = (event) => {
-  console.log("received message");
-};
+// socketAPI.onmessage = (event) => {
+//   console.log("received message");
+// };
 
-socketAPI.onclose = (event) => {
-  if (event.wasClean) {
-    console.log("WebSocket closed cleanly:", event);
-  } else {
-    console.error("WebSocket connection closed unexpectedly:", event);
-  }
-};
+// socketAPI.onclose = (event) => {
+//   if (event.wasClean) {
+//     console.log("WebSocket closed cleanly:", event);
+//   } else {
+//     console.error("WebSocket connection closed unexpectedly:", event);
+//   }
+// };
 
-socketAPI.onerror = (error) => {
-  console.error("WebSocket error:", error);
-};
+// socketAPI.onerror = (error) => {
+//   console.error("WebSocket error:", error);
+// };
 
 function findMissingValues(arr1, arr2) {
   // Create a Set from the second array for faster lookups
@@ -86,9 +86,9 @@ function findMissingValues(arr1, arr2) {
 }
 
 function fetchData(paramValue) {
-  // paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
-  fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { // uncomment this if using websocket
-  // fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, {
+  paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
+  // fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { // uncomment this if using websocket
+  fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, {
     //uncomment this if using button
     method: "GET",
     headers: {
@@ -209,8 +209,6 @@ async function saveTransaction() {
     trans_line: trans_line,
   };
 
-  console.log("data:", data);
-
   await fetch(`${apiUrl}/transaction/saveTransaction`, {
     method: "POST",
     headers: {
@@ -225,6 +223,12 @@ async function saveTransaction() {
         result.trans_header[0].transaction_status +
         result.trans_header[0].transaction_code;
       confirm("Transaction saved! Please proceed to checkout counters");
+      localStorage.setItem(
+        "transactionId",
+        result.trans_header[0].transaction_id
+      );
+
+      window.location.href = "checkout.html";
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -258,7 +262,7 @@ window.addEventListener("load", function () {
   // padWithLeadingZeros(this.localStorage.getItem('userId'), 6);
 });
 
-// getBtn.addEventListener("click", fetchData);
+getBtn.addEventListener("click", fetchData);
 checkout.addEventListener("click", saveTransaction);
 // deleteBtn.addEventListener("click", removeRow);
 
