@@ -37,31 +37,25 @@
             <div class="modal-content">
                 <span class="close" id="closeModal">&times;</span>
                 <h2 id="modal-title">Dynamic Modal Title</h2>
-                <form id="addUserForm">
+                <form id="processForm">
                     <div class="form-group">
-                        <label for="username">First name:</label>
-                        <input type="text" id="fName" placeholder="First Name">
+                        <label for="totalAmount">Total Amount:</label>
+                        <label for="totalAmount" id="totalTxt" class="txtField">0.00</label>
                     </div>
                     <div class="form-group">
-                        <label for="password">Middle name:</label>
-                        <input type="text" id="mName" placeholder="Middle Name">
+                        <label for="pmtAmount">Payment Received:</label>
+                        <input type="text" id="pmtAmt" placeholder="0.00">
+                        <!-- <label for="pmtAmount" id="paymentTxt" class="txtField">0.00</label> -->
                     </div>
                     <div class="form-group">
-                        <label for="password">Last name:</label>
-                        <input type="text" id="lName" placeholder="Last Name">
+                        <label for="changeAmt">Change:</label>
+                        <label for="changeAmt" id="changeTxt" class="txtField">0.00</label>
                     </div>
-                    <div class="form-group">
-                        <label for="country">Role</label>
-                        <select id="userRole" name="roles">
-                            <option value="CUSTOMER">CUSTOMER</option>
-                            <option value="CASHIER">CASHIER</option>
-                            <option value="ADMIN">ADMIN</option>
-                        </select>
+                    <div class="form-group-footer">
+                        <input type="submit" id="process" value="PROCESS">
+                        <!-- <button type="button" id="cancel">Cancel</button> -->
+                        <!-- <input type="submit" id="cancel"  value="CANCEL"> -->
                     </div>
-                    <!-- <div class="form-group-footer">
-                        <input type="submit" id="addUser" value="ADD USER">
-                        <input type="submit" id="cancel"  value="CANCEL">
-                    </div> -->
                 </form>
 
 
