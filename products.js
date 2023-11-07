@@ -45,6 +45,7 @@ async function fetchData() {
                                         <td><button onClick="onEdit(this)">Edit</button> <button>Delete</button></td>
                             `;
                 tableBody.appendChild(row);
+                modal.style.display = "none"
             })
         }).catch((error) => {
             console.log("Error fetching data:", error);
@@ -55,26 +56,53 @@ async function fetchData() {
 async function addNewProduct(event) {
     event.preventDefault();
     const data = {
-        firstName: document.getElementById("nameProd").value,
-        middleName: document.getElementById("descProd").value,
-        lastName: document.getElementById("sizeProd").value,
-        userRole: document.getElementById("priceProd").value,
+        productName: document.getElementById("nameProd").value,
+        productDesc: document.getElementById("descProd").value,
+        size: document.getElementById("sizeProd").value,
+        price: document.getElementById("priceProd").value,
     }
     await fetch(`${apiUrl}/products/addProduct`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*"
-            }
+            },
+            body: JSON.stringify(data)
         }).then((response) => response.json())
         .then((result) => {
-            console.log("");
+            newRow(result[0])
         }).catch((error) => {
             console.error("Error:", error);
         });
 }
 
+function newRow(result) {
+    const tableBody = document.querySelector("#apiTable tBody");
+    const row = document.createElement("tr");
+    row.innerHTML = `
+                                        <td>${result.product_id}</td>
+                                        <td>${result.name_prod}</td>
+                                        <td>${result.description}</td>
+                                        <td>${result.prod_size}</td>
+                                        <td>${result.price}</td>
+                                        <td><button onClick="onEdit(this)">Edit</button> <button>Delete</button></td>
+                            `;
+    tableBody.appendChild(row);
+}
+
+// Function to clear the table rows
+function clearTable() {
+    const table = document.getElementById("apiTable");
+    const tbody = table.querySelector("tbody");
+
+    // Remove all rows from the tbody
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+}
+
+document.getElementById("addProductForm").addEventListener("submit", addNewProduct);
+
 window.addEventListener("load", function () {
     fetchData();
-    console.log(`${apiUrl}/products/getAllProduct`);
 });

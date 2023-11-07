@@ -67,15 +67,27 @@ async function addNewUser(event) {
     })
     .then((response) => response.json())
     .then((result) => {
-      fetchData();
-      console.log("result:", result);
+      newRow(result[0])
+      modal.style.display = "none"
     })
     .catch((error) => {
       console.error("Error:", error);
     });
 }
 
-// Function to open the modal
+function newRow(result) {
+  const tableBody = document.querySelector("#apiTable tBody");
+  const row = document.createElement("tr");
+  row.innerHTML = `
+  <td>${result.user_id}</td>
+  <td>${result.full_name}</td>
+  <td>${result.username}</td>
+  <td>${result.user_role}</td>
+  <td><button onClick="onEdit(this)">Edit</button> <button>Delete</button></td>
+  
+`;
+  tableBody.appendChild(row);
+}
 
 // Function to close the modal
 function closeModal() {
