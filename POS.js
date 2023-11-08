@@ -27,6 +27,7 @@ socket.addEventListener("open", (event) => {
 // };
 
 socket.addEventListener("message", (event) => {
+
   const outputDiv = document.getElementById("output");
   paramValue = event.data;
 
@@ -89,13 +90,13 @@ function fetchData(paramValue) {
   paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
   // fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { // uncomment this if using websocket
   fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, {
-    //uncomment this if using button
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-  }) // Replace with your API endpoint
+      //uncomment this if using button
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    }) // Replace with your API endpoint
     .then((response) => response.json())
     .then((data) => {
       const tableBody = document.querySelector("#apiTable tbody");
@@ -210,13 +211,13 @@ async function saveTransaction() {
   };
 
   await fetch(`${apiUrl}/transaction/saveTransaction`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-    body: JSON.stringify(data),
-  })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(data),
+    })
     .then((response) => response.json())
     .then((result) => {
       transactionCode.textContent =

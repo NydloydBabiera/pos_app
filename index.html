@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="appLogin.css">
-    
+<link rel="stylesheet" href="appLogin.css">
+
 <head>
     <title>E-Cart POS</title>
 </head>
@@ -23,8 +23,29 @@
             </div>
         </form>
     </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modal-title">Dynamic Modal Title</h2>
+            <form id="updatePasswordForm">
+                <div class="form-group">
+                    <input type="password" id="newPassword" placeholder="New Password">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password">
+                </div>
+                <div class="form-group-footer">
+                    <input type="submit" id="addUser" value="ADD USER">
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
 </body>
 
 <script type="text/javascript" src="config.js"> </script>
 <script type="text/javascript" src="login.js"></script>
+
 </html>

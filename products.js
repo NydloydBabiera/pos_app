@@ -90,7 +90,7 @@ function newRow(result) {
     tableBody.appendChild(row);
 }
 
-// Function to clear the table rows
+// Function to clear the table rowsz
 function clearTable() {
     const table = document.getElementById("apiTable");
     const tbody = table.querySelector("tbody");

@@ -187,3 +187,13 @@ select {
   cursor: pointer;
   font-size: 15px;
 }
+
+.content {
+  border: 1px solid black;
+  display: flex;
+}
+
+.content button{
+  display: flex;
+  float: right;
+}

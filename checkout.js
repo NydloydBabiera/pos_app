@@ -1,4 +1,7 @@
 let totalAmt = 0;
+document.getElementById("btnExit").addEventListener("click", function () {
+  window.location.href = "index.html"
+})
 async function fetchData(transactionId) {
   await fetch(`${apiUrl}/transaction/getSpecificTransaction/${transactionId}`) // Replace with your API endpoint
     .then((response) => response.json())
@@ -43,9 +46,9 @@ function padWithLeadingZeros(num, totalLength) {
 }
 
 window.addEventListener("load", function () {
-    if (!this.localStorage.getItem("transactionId")) {
-        window.location.href = "index.html";
-      }
+  if (!this.localStorage.getItem("transactionId")) {
+    window.location.href = "index.html";
+  }
   const transactionId = localStorage.getItem("transactionId");
   console.log("transactionId:", transactionId);
   fetchData(transactionId);
