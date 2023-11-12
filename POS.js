@@ -1,33 +1,33 @@
 // import { apiUrl } from "./config.js";
-const socket = new WebSocket("ws://192.168.68.106"); //192.168.68.105 - tacurong 192.168.254.103-gensan
+const socket = new WebSocket("ws://192.168.254.102"); //192.168.68.105 - tacurong 192.168.254.103-gensan
 const socketAPI = new WebSocket("ws://localhost:3000");
 const checkout = document.getElementById("checkout");
 const transactionCode = document.getElementById("transTxt");
 const getBtn = document.getElementById("get-btn");
-// const deleteBtn = document.getElementById("delete-btn");
+const deleteBtn = document.getElementById("delete-btn");
 const userTxt = document.getElementById("userTxt");
 const displayTotal = document.getElementById("displayTotal");
-const dataArr = [];
+let dataArr = [];
 let totalProd = 0;
 let paramValue = "";
 const myList = [];
 const checkList = [];
 let valExist = false;
+let cntProd = 0;
 
 //socket for esp32 camera
 socket.addEventListener("open", (event) => {
   var status = document.getElementById("status");
 
-  // status.innerHTML += `<p> Status: Connected to ESP 32!</p>`;
+  status.innerHTML += `<p> Status: Connected to ESP 32!</p>`;
   console.log("Connected to ESP 32");
 });
 
-// socket.onerror = function (event) {
-//   console.error('WebSocket connection error:', event);
-// };
+socket.onerror = function (event) {
+  console.error('WebSocket connection error:', event);
+};
 
 socket.addEventListener("message", (event) => {
-
   const outputDiv = document.getElementById("output");
   paramValue = event.data;
 
@@ -35,22 +35,60 @@ socket.addEventListener("message", (event) => {
   if (paramValue === "empty") {
     console.log("No product found");
     removeAllRows();
+    cntProd = 0;
     return;
   }
   if (myList.includes(paramValue)) {
     return;
   }
 
-  console.log("paramValue:", paramValue);
-  fetchData(paramValue);
-  myList.push(paramValue);
+  const prods = paramValue.replace("[", "").replace("]", "");
+  const prodList = prods.split(",");
+
+  // prodList.forEach((element) => {
+  //   console.log("element:", element);
+  // });
+
+  //  prodList.forEach((element, index, array) => {
+  //     console.log("cntProd:", cntProd);
+  //     console.log("prodlis:", prodList.length - 1);
+  //     if (index === array.length - 1) {
+  //         // Remove the last element
+  //         array.pop();
+  //     } else {
+  //       if(cntProd > prodList.length - 1){
+  //         return;
+  //       }
+  //         fetchData(element);
+  //         cntProd++;
+  //     }
+  // });
+
+  for (let i = 0; i < prodList.length - 1; i++) {
+    console.log("cntProd:", cntProd);
+    console.log("prodlis:", prodList.length - 1);
+    if (cntProd >= prodList.length - 1) {
+      return;
+    }
+    if(cntProd < prodList.length -1 ){
+      removeAllRows();
+      cntProd = 0;
+    }
+    fetchData(prodList[i]);
+    cntProd++;
+  }
+
+  // paramValue.forEach(element => {
+
+  // });
+  // fetchData(paramValue);
+  // myList.push(paramValue);
   // checkList.push(paramValue);
 });
-
 socket.addEventListener("close", (event) => {
   var status = document.getElementById("status");
 
-  console.log("Connected to ESP 32");
+  console.log("Connection close");
   status.innerHTML += `<p> Status: Connection Close</p>`;
 });
 
@@ -87,16 +125,16 @@ function findMissingValues(arr1, arr2) {
 }
 
 function fetchData(paramValue) {
-  paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
+  // paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
   // fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { // uncomment this if using websocket
   fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, {
-      //uncomment this if using button
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    }) // Replace with your API endpoint
+    //uncomment this if using button
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  }) // Replace with your API endpoint
     .then((response) => response.json())
     .then((data) => {
       const tableBody = document.querySelector("#apiTable tbody");
@@ -120,6 +158,7 @@ function fetchData(paramValue) {
                     <td>${item.name_prod}</td>
                     <td>${item.description}</td>
                     <td>${item.prod_size}</td>
+                    <td>1</td>
                     <td>${item.price}</td>
                 `;
         tableBody.appendChild(row);
@@ -129,6 +168,34 @@ function fetchData(paramValue) {
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
+}
+
+function updateQuantity(dataValue) {
+  
+  var newValue = prompt("Enter new value for Cell " + (3 + 1) + ":");
+  // dataValue = document.getElementById("paramInput").value;
+  var table = document.getElementById("apiTable");
+  // Loop through the rows in the table (skip the header row)
+  let newTotal = 0;
+  for (var i = 1; i < table.rows.length; i++) {
+    var cellContent = table.rows[i].cells[1].textContent;
+    var cellAmt = table.rows[i].cells[5].textContent;
+
+    if (cellContent === dataValue) {
+      var row = table.rows[i];
+      row.cells[4].innerText = newValue;
+      row.cells[5].innerText = parseInt(newValue) * parseFloat(cellAmt);
+      // display new total values
+      
+      for (var i = 1; i < table.rows.length; i++) {
+        var getTotal = table.rows[i].cells[5].textContent;
+        newTotal += parseFloat(getTotal);
+      }
+      
+    }
+  }
+  
+  displayTotal.textContent = getTotal;
 }
 
 function removeRow() {
@@ -194,8 +261,8 @@ async function saveTransaction() {
     const cells = row.getElementsByTagName("td");
 
     const product_id = cells[0].textContent;
-    const qty_prod = 1;
-    const amt_total_lines = cells[4].textContent;
+    const qty_prod = cells[4].textContent;
+    const amt_total_lines = cells[5].textContent;
 
     trans_line.push({
       product_id: product_id,
@@ -211,13 +278,13 @@ async function saveTransaction() {
   };
 
   await fetch(`${apiUrl}/transaction/saveTransaction`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    })
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify(data),
+  })
     .then((response) => response.json())
     .then((result) => {
       transactionCode.textContent =
@@ -265,7 +332,7 @@ window.addEventListener("load", function () {
 
 getBtn.addEventListener("click", fetchData);
 checkout.addEventListener("click", saveTransaction);
-// deleteBtn.addEventListener("click", removeRow);
+deleteBtn.addEventListener("click", updateQuantity);
 
 function padWithLeadingZeros(num, totalLength) {
   return String(num).padStart(totalLength, "0");
