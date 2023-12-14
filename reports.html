@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+</head>
+<link rel="stylesheet" href="appReports.css">
+
+<body>
+    <div class="header">
+        <h1>E-Cart POS System Reports</h1>
+        <label for="date">Date:</label>
+        <input type="date" id="dateFrom" name="datetime">
+        <label for="date">-</label>
+        <input type="date" id="dateTo" name="datetime">
+        <button id="btnFilter">Filter</button>
+    </div>
+    <div class="body">
+        <table id="apiTable" class="content-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Status</th>
+                    <th>Transaction Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be dynamically generated here -->
+            </tbody>
+
+        </table>
+        <label>Total:</label>
+        <label for="total" id="displayTotal">0.00</label>
+    </div>
+    <script type="text/javascript" src="config.js"> </script>
+    <script type="text/javascript" src="reports.js"> </script>
+</body>
+
+</html>

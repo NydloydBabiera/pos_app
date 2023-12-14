@@ -70,7 +70,7 @@ socket.addEventListener("message", (event) => {
     if (cntProd >= prodList.length - 1) {
       return;
     }
-    if(cntProd < prodList.length -1 ){
+    if (cntProd < prodList.length - 1) {
       removeAllRows();
       cntProd = 0;
     }
@@ -128,13 +128,13 @@ function fetchData(paramValue) {
   // paramValue = document.getElementById("paramInput").value; //uncomment this line if ur not using websocket or testing
   // fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, { // uncomment this if using websocket
   fetch(`${apiUrl}/products/getSpecificProduct/${paramValue}`, {
-    //uncomment this if using button
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-  }) // Replace with your API endpoint
+      //uncomment this if using button
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    }) // Replace with your API endpoint
     .then((response) => response.json())
     .then((data) => {
       const tableBody = document.querySelector("#apiTable tbody");
@@ -171,7 +171,7 @@ function fetchData(paramValue) {
 }
 
 function updateQuantity(dataValue) {
-  
+
   var newValue = prompt("Enter new value for Cell " + (3 + 1) + ":");
   // dataValue = document.getElementById("paramInput").value;
   var table = document.getElementById("apiTable");
@@ -186,15 +186,15 @@ function updateQuantity(dataValue) {
       row.cells[4].innerText = newValue;
       row.cells[5].innerText = parseInt(newValue) * parseFloat(cellAmt);
       // display new total values
-      
+
       for (var i = 1; i < table.rows.length; i++) {
         var getTotal = table.rows[i].cells[5].textContent;
         newTotal += parseFloat(getTotal);
       }
-      
+
     }
   }
-  
+
   displayTotal.textContent = getTotal;
 }
 
@@ -278,13 +278,13 @@ async function saveTransaction() {
   };
 
   await fetch(`${apiUrl}/transaction/saveTransaction`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-    body: JSON.stringify(data),
-  })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(data),
+    })
     .then((response) => response.json())
     .then((result) => {
       transactionCode.textContent =

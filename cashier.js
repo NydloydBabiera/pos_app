@@ -121,6 +121,22 @@ function onEdit(button) {
 function closeModal() {
   modal.style.display = "none";
 }
+document.addEventListener("DOMContentLoaded", function () {
+  // Set the maximum number of rows to display
+  var maxRows = 5;
+
+  // Get the table and its tbody
+  var table = document.getElementById("apiTable");
+  var tbody = table.querySelector("tbody");
+
+  // Get all rows in the tbody
+  var rows = tbody.getElementsByTagName("tr");
+
+  // Hide rows beyond the maximum specified
+  for (var i = maxRows; i < rows.length; i++) {
+    rows[i].style.display = "none";
+  }
+});
 
 // add modal para sa pagdawat sa payment
 document
@@ -138,17 +154,17 @@ document
       return;
     }
     fetch(`${apiUrl}/transaction/processTransaction`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    })
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(data),
+      })
       .then((response) => response.json())
       .then((result) => {
         alert(result.message);
-        changeTxt.textContent =  Number(txtPmtAmt) - Number(totalTxtLbl.textContent)
+        changeTxt.textContent = Number(txtPmtAmt) - Number(totalTxtLbl.textContent)
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -156,9 +172,9 @@ document
   });
 window.addEventListener("load", function () {
   cashierId = this.localStorage.getItem("userId");
-  if (!this.localStorage.getItem("userId")) {
-    window.location.href = "index.html";
-  }
+  // if (!this.localStorage.getItem("userId")) {
+  //   window.location.href = "index.html";
+  // }
   fetchData();
   console.log("cashierId:", cashierId);
 });
