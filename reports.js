@@ -1,5 +1,8 @@
 var btnFilter = document.getElementById("btnFilter");
 var displayTotal = document.getElementById("displayTotal");
+var btnPrint = document.getElementById("btnPrint")
+var param = document.getElementById("paramHeader")
+var paramDisplay = document.getElementById("paramDisplay")
 async function fetchData() {
     await fetch(`${apiUrl}/transaction/getAllTransaction`) // Replace with your API endpoint
         .then((response) => response.json())
@@ -28,7 +31,7 @@ async function fetchData() {
                               <td>${item.transaction_code}</td>
                               <td>${item.transaction_status}</td>
                               <td>${formattedDate}</td>
-                              <td>${item.amt_total}</td> 
+                              <td>${item.amt_total.toFixed(2)}</td> 
                           `;
                 tableBody.appendChild(row);
 
@@ -59,9 +62,10 @@ function filterTable() {
         var amtColumn = rows[i].getElementsByTagName("td")[4]; // Assuming date is in the second column
         if (dateColumn) {
             var dateValue = new Date(dateColumn.textContent || dateColumn.innerText);
+
             if (dateValue >= startDate && dateValue <= endDate) {
                 rows[i].style.display = "";
-                totalAmt += amtColumn.textContent;
+                totalAmt += parseFloat(amtColumn.textContent);
             } else {
                 rows[i].style.display = "none";
             }
@@ -72,6 +76,28 @@ function filterTable() {
     console.log(totalAmt)
 }
 
+function printPage() {
+    var startDateInput = document.getElementById("dateFrom");
+    var endDateInput = document.getElementById("dateTo");
+    const startDate = document.getElementById("startDate")
+    const endDate = document.getElementById("endDate")
+    const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    };
+    const dateTransStart = new Date(startDateInput.value).toLocaleDateString("en-US", options);
+    const dateTransEnd = new Date(endDateInput.value).toLocaleDateString("en-US", options);
+
+    // const formattedDateStart = dateTransStart.toLocaleDateString("en-US", options);
+    // const formattedDateEnd = dateTransEnd.toLocaleDateString("en-US", options);
+    startDate.textContent = dateTransStart
+    endDate.textContent = dateTransEnd
+    param.style.display = "none";
+    paramDisplay.style.display = "block"
+}
+
+
 window.addEventListener("load", function () {
     cashierId = this.localStorage.getItem("userId");
     // if (!this.localStorage.getItem("userId")) {
@@ -79,6 +105,25 @@ window.addEventListener("load", function () {
     // }
     fetchData();
     console.log("cashierId:", cashierId);
+    paramDisplay.style.display = "none"
+    var startDateInput = document.getElementById("dateFrom");
+    var endDateInput = document.getElementById("dateTo");
+    startDateInput.value = formatDate();
+    endDateInput.value = formatDate();
 });
 
+function formatDate(date = new Date()) {
+    return [
+        date.getFullYear(),
+        padTo2Digits(date.getMonth() + 1),
+        padTo2Digits(date.getDate()),
+    ].join('-');
+}
+
+function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+}
+
+
 btnFilter.addEventListener("click", filterTable)
+btnPrint.addEventListener("click", printPage)

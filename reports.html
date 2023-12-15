@@ -11,13 +11,23 @@
 <body>
     <div class="header">
         <h1>E-Cart POS System Reports</h1>
+    </div>
+    <div class="param" id="paramHeader">
         <label for="date">Date:</label>
         <input type="date" id="dateFrom" name="datetime">
         <label for="date">-</label>
         <input type="date" id="dateTo" name="datetime">
         <button id="btnFilter">Filter</button>
+        <button id="btnPrint">Print</button>
+    </div>
+    <div class="display" id="paramDisplay">
+        <label>Date:</label>
+        <label id="startDate">mmmm dd, yyyy</label>
+        <label id="startDate"> - </label>
+        <label id="endDate">mmmm dd, yyyy</label>
     </div>
     <div class="body">
+      
         <table id="apiTable" class="content-table">
             <thead>
                 <tr>
@@ -33,6 +43,8 @@
             </tbody>
 
         </table>
+    </div>
+    <div class="footer">
         <label>Total:</label>
         <label for="total" id="displayTotal">0.00</label>
     </div>

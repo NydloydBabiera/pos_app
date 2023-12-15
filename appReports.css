@@ -11,13 +11,16 @@ h1{
 .body {
     align-items: center;
     width: 100%;
-    text-align: center;
+    text-align: left;
   }
-  
-  
+
+  #btnPrint{
+    margin-left: 60%;
+  }
+
 label {
     /* display: block; */
-    font-size: 30px;
+    font-size: 15px;
     margin-bottom: 8px;
 }
 
@@ -84,7 +87,7 @@ input[type="date"]:focus {
   
   
   .content-table tbody tr:last-of-type {
-    border-bottom: 2px solid #076313;
+    /* border-bottom: 2px solid #076313; */
   }
   
   .content-table tbody tr.active-row {
@@ -111,15 +114,9 @@ input[type="date"]:focus {
 
   .footer {
     /* border: 1px solid red; */
-    margin-top: 5px;
-    margin-right: 20px;
-    text-align: center;
-    flex: 1;
-    padding: 3px;
+    text-align: right;
     right: 0;
-    position: absolute;
     padding: 12px 20px 12px 40px;
-    /* margin: 10px 10px 10px 10px; */
   }
   
   
@@ -139,14 +136,18 @@ input[type="date"]:focus {
   .footer #displayTotal {
     width: 130px;
     box-sizing: border-box;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-radius: 4px;
     font-size: 30px;
     background-color: white;
     background-position: 10px 10px;
     background-repeat: no-repeat;
-    padding: 12px 20px 12px 40px;
+    /* padding: 8px 8px 5px 40px; */
     transition: width 0.4s ease-in-out;
     text-align: center;
   }
   
+
+  .display{
+    text-align: center;
+  }

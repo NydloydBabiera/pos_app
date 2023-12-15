@@ -33,9 +33,10 @@ document
         // window.location.href = 'POS.html';
         if (result.status == 1) {
           console.log("result:", result.data);
-          if (result.data.userName == result.data.user_password) {
+          if (result.data.username === result.data.user_password) {
             modal.style.display = "block"
             modalTitle.textContent = "Set your own password!"
+
           } else {
             switch (result.data.user_role) {
               case "CUSTOMER":
