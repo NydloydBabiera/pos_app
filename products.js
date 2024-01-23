@@ -42,7 +42,6 @@ async function fetchData() {
                                         <td>${item.description}</td>
                                         <td>${item.prod_size}</td>
                                         <td>${item.price}</td>
-                                        <td><button onClick="onEdit(this)">Edit</button> <button>Delete</button></td>
                             `;
                 tableBody.appendChild(row);
                 modal.style.display = "none"
